@@ -6,46 +6,46 @@ input info:
 ->folder(s) to move
 
 """
-orig=r'C:\Users\vara9003\Pictures\Centro de devoluciones_files'
-dest1=r'C:\Users\vara9003\Pictures\Centro de devoluciones_files\organizados\imagenes'
-dest2=r'C:\\Users\vara9003\Pictures\Centro de devoluciones_files\organizados\script'
-
-destinies={r'\.jpg$':dest1,
-            r'\.png$':dest1,
-
-            r'\.js':dest2,
-            r'\.css$':dest2}
 
 import shutil
 import os
 import re
 from pathlib import Path
+from typing import List
 
-def file_move(destination,file):
-    pass
-    shutil.move(str(Path(os.getcwd(),file)),destination)
 
-def file_match(destinies,file)->str:
-    
-    for exp in destinies.keys():
-        patron=re.compile(exp)
-        if patron.search(file):
-            return destinies[exp]
+def file_move(origin:str,destination:str,files:List):
+    for f in files:
+        #shutil.move(str(Path(os.getcwd(),f)),destination) # printed to test
+        shutil.move(str(Path(origin,f)),destination)
+        #print(f)
 
-def folder_scan(f_path): 
-    os.chdir(f_path)
-    return os.listdir()
+def file_match(file,regex)->str:
+    condition=re.compile(regex)
+    if condition.search(file):
+        return True
+    else:
+        return False
+
+
+def confirm():
+    return False
+
+def mainFunction(origen:str ,dest:str ,regex:str)->List:
+    origin=Path(origen)
+    destination=Path(dest)
+    moved_files=0
+    contents=os.listdir(origin)
+    print('contenidos::')
+    print(contents)
+    to_move=[]
+    for file in contents:
+        if file_match(file,regex):
+            #file_move(destination,file)
+            to_move.append(file)
+            moved_files +=1
+    return to_move
+
 
 if __name__ == "__main__":
-    scn_dir=Path(orig)
-    contents=folder_scan(Path(orig))
-    #print(os.getcwd())
-    #print(contents)
-    moved_files=0
-    for file in contents:
-        destination=file_match(destinies,file)
-        if destination:
-            file_move(destination,file)
-            moved_files +=1
-    print('Number of moved Files: ',moved_files)
-        
+    pass
