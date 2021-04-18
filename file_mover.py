@@ -13,6 +13,21 @@ import re
 from pathlib import Path
 from typing import List
 
+def get_new_name(filtrados, reg_exp,punto_corte):
+    ext = re.compile(r'\..{2,5}$')
+    new_names = []
+    for i in filtrados:
+        ext_str = ext.search(i).group()
+        inicio = reg_exp.search(i).span()
+        # breakpoint()
+        new_names.append(i[:inicio[punto_corte]] + str(ext_str))
+
+    return zip(filtrados, new_names)
+    
+def rename(new_names,folder):
+    for old,new in new_names:
+        os.rename(Path(folder,old),Path(folder,new))
+
 
 def file_move(origin:str,destination:str,files:List):
     for f in files:
@@ -31,9 +46,9 @@ def file_match(file,regex)->str:
 def confirm():
     return False
 
-def mainFunction(origen:str ,dest:str ,regex:str)->List:
+def filter_files(origen:str,regex:str)->List:
     origin=Path(origen)
-    destination=Path(dest)
+    #destination=Path(dest)
     moved_files=0
     contents=os.listdir(origin)
     print('contenidos::')
