@@ -60,10 +60,6 @@ def mainTk_move(from_, to_, reg_ex):
 
 
 def mainTk_rename(from_, reg_ex, replace, prefix, suffix):
-    #print('regex',reg_ex.get())
-    #print('replace',replace[0].get(),replace[1].get())
-    #print('prefix',prefix[0].get(),prefix[1].get())
-    #print('suffix',suffix)
 
     selected_files = fm.filter_files(from_.get(), reg_ex.get())
     new_names = ['' for _ in range(len(selected_files))]
