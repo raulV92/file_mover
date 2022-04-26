@@ -35,9 +35,9 @@ def file_move(origin:str,destination:str,files:List):
         shutil.move(str(Path(origin,f)),destination)
         #print(f)
 
-def file_match(file,regex)->str:
+def file_match(file_,regex)->str:
     condition=re.compile(regex)
-    if condition.search(file):
+    if condition.search(file_):
         return True
     else:
         return False
@@ -54,10 +54,10 @@ def filter_files(origen:str,regex:str)->List:
     print('contenidos::')
     print(contents)
     to_move=[]
-    for file in contents:
-        if file_match(file,regex):
+    for file_ in contents:
+        if file_match(file_,regex):
             #file_move(destination,file)
-            to_move.append(file)
+            to_move.append(file_)
             moved_files +=1
     return to_move
 
