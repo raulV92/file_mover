@@ -14,8 +14,12 @@ import os
 from typing import List
 
 
-def get_dir(textBox: tk.Entry):
-    texto = filedialog.askdirectory()
+def get_dir(textBox: tk.Entry, type_:str = 'dir'):
+    if type_ == 'dir':
+        texto = filedialog.askdirectory()
+    elif type_ == 'file':
+        texto = filedialog.askopenfilename()
+
     inTxt = textBox.get()
     textBox.delete(0, len(inTxt))
     textBox.insert(0, texto)
@@ -94,6 +98,11 @@ def mainTk_rename(from_, reg_ex, replace, prefix, suffix):
     print(list(zip(selected_files, new_names)))
     #breakpoint()
 
+def mainTk_unzip(zipped_textBox, output_dir=None):
+    
+    zipped_file = zipped_textBox.get()
+    fm.unzip_file(zipped_file, output_dir)
+    messagebox.showinfo('Process Completed', f'{zipped_file} extracted')
 
 ### My widgets:
 
@@ -103,7 +112,8 @@ def path_text_with_button(tab_,
                           btn_label,
                           y_axis,
                           default_btn=False,
-                          def_label='Default'):
+                          def_label='Default',
+                          get_type='dir'):
     # Main Line
     tk.Label(tab_, text=ln_label).place(x=30, y=y_axis)
     folder1 = tk.StringVar()
@@ -113,7 +123,7 @@ def path_text_with_button(tab_,
                           text=btn_label,
                           activebackground="pink",
                           activeforeground="blue",
-                          command=lambda: get_dir(sourceBox))
+                          command=lambda: get_dir(sourceBox,get_type))
     sourceBtn.place(x=365, y=y_axis)
 
     # Optional default button
@@ -194,14 +204,37 @@ def draw_rename_tab(tab_name: str):
               command=lambda: mainTk_rename(from_dir, reg_ex, replace, prefix,
                                             suffix)).place(x=30, y=190)
 
+def draw_unzip_tab(tab_name:str):
+    
+    tab_unzip = ttk.Frame(tabControl)
+    tabControl.add(tab_unzip, text=tab_name)
+    tabControl.pack(expand=1, fill="both")
+
+    zipped_file = path_text_with_button(tab_unzip,
+        "select file",
+        "Browse...",
+        50,
+        get_type='file')
+    # fm.unzip_file(zipped_file)
+    tk.Button(tab_unzip,
+              text="unZip",
+              activebackground="pink",
+              activeforeground="blue",
+              command=lambda: mainTk_unzip(zipped_file)
+              ).place(x=30, y=180)
+              
+
+
+
 
 os.chdir(Path.home())
 root = tk.Tk()
 root.title('File mover and bulk rename')
-root.geometry("450x250")
+root.geometry("550x250")
 tabControl = ttk.Notebook(root)
 
 draw_mover_tab('File Mover')
 draw_rename_tab('Rename')
+draw_unzip_tab('unZip')
 
 root.mainloop()

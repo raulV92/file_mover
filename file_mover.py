@@ -10,6 +10,8 @@ input info:
 import shutil
 import os
 import re
+import patoolib
+
 from pathlib import Path
 from typing import List
 
@@ -61,6 +63,23 @@ def filter_files(origen:str,regex:str)->List:
             moved_files +=1
     return to_move
 
+
+def unzip_file(zipped_file:str, output_folder:Path=None):
+     
+    dir_ = Path(zipped_file)
+    if not output_folder:
+        default_output = 'extracted_files'
+        os.mkdir(Path(dir_.parent,default_output))
+        out_dir = Path(dir_.parent, default_output)
+
+    else:
+        out_dir = output_folder
+    
+    try:
+        patoolib.extract_archive(zipped_file, outdir=out_dir)
+    except:
+        print('error en descomprimir...')
+        pass
 
 if __name__ == "__main__":
     pass
